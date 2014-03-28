@@ -16,3 +16,21 @@ AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABL
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
+http.onrequest(function(request,res){
+        try {
+            local json_req = http.jsondecode(request.body);
+            local json_resp = "OK";
+            if("red" in json_req && "green" in json_req && "blue" in json_req){
+                server.log("RGB: " + request.body);
+                device.send("rgb", json_req);
+                resp.send(200, json_resp);
+            }
+            else {
+                server.log("Unrecognized Body: "+request.body);
+            }
+        }    
+        catch (ex) {
+            res.send(500, "Internal Server Error: " + ex);  
+        }
+});
